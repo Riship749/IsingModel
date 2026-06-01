@@ -10,7 +10,7 @@ The project is divided into two phases:
 2. **Out-of-Equilibrium Dynamics (Novel Contribution):** Introducing a time-dependent oscillating magnetic field and quenched lattice defects to mathematically map how non-magnetic impurities pin domain walls and collapse dynamic limit cycles.
 
 ## Project Evolution & Inspiration
-This engine was initially built to re-create the baseline thermodynamic results outlined in Saryu Jindal's 2007 UC Davis paper, *[Monte Carlo Simulation of the Ising Model](https://csc.ucdavis.edu/~chaos/courses/nlp/Projects2007/SaryuJindal/isingpaper.pdf)*. 
+This engine was initially built to re-create the baseline thermodynamic results outlined in the paper Introduction to Monte Carlo methods for an Ising Model of a Ferromagnet by Jacques Kotze: https://arxiv.org/pdf/0803.0217 
 
 After successfully re-creating Jindal's static phase transition models, I expanded the underlying Hamiltonian to push the system out of equilibrium:
 $$\mathcal{H} = -J \sum_{\langle i,j \rangle} \epsilon_i \epsilon_j s_i s_j - H_0 \sin(\omega t) \sum_{i} \epsilon_i s_i$$
