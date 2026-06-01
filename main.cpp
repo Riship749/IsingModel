@@ -5,19 +5,24 @@
 #include <random>
 #include <cmath>
 #include <string>
+#include <sstream>
 #include "include/IsingLattice.h"
 #include "include/MonteCarlos.h"
 
 int main() {
+    const double pi = std::acos(-1.0);
     int L = 32;
-    const double PI = std::acos(-1.0);
 
-    //list of the active fractions we want to test (1.0 = 0% defects, 0.7 = 30% defects)
-    std::vector<double> activeFractions = {1.0, 0.90, 0.80, 0.70};
+    // LOCK IN SPACE: Fix the lattice at 10% Quenched Defects
+    double activeFraction = 0.90;
 
-    double omega = 2.0 * PI * 0.01;
+    //A list of the driving frequencies (omega) we want to test
+    // 0.01*pi (Slow), 0.05*pi (Medium), 0.10*pi (Fast)
+    std::vector<double> omegas = {0.01 * pi, 0.05 * pi, 0.10 * pi};
+    std::vector<std::string> omega_labels = {"0.01", "0.05", "0.10"};
+
     int stepsPerPeriod = 200;
-    int transientPeriods = 50;  // High burn-in to handle the 30% defect lag
+    int transientPeriods = 50;
     int dataPeriods = 20;
 
     double tStart = 3.0, tEnd = 0.5, tStep = 0.1;
@@ -25,20 +30,20 @@ int main() {
 
     std::mt19937 rng(42);
 
-    std::cout << "Starting Automated Defect Scaling Batch..." << std::endl;
+    std::cout << "Starting Automated Frequency Scaling Batch..." << std::endl;
 
-    //Iterate through each defect concentration
-    for (double activeFraction : activeFractions) {
+    // THE BATCH LOOP: Iterate through each driving frequency
+    for (size_t i = 0; i < omegas.size(); ++i) {
 
-        // Calculate the defect percentage for the filename (e.g., 10, 20, 30)
-        int defectPercent = std::round((1.0 - activeFraction) * 100);
-        std::string filename = "data/dynamic_boundary_" + std::to_string(defectPercent) + "pct.csv";
+        double omega = omegas[i];
+        std::string filename = "data/dynamic_boundary_w" + omega_labels[i] + ".csv";
 
         std::ofstream outFile(filename);
         outFile << "Temperature,H0,Q_OrderParameter\n";
 
-        std::cout << "\n=== Running " << defectPercent << "% Defects ===" << std::endl;
+        std::cout << "\n=== Running Frequency omega = " << omega_labels[i] << "*pi ===" << std::endl;
 
+        // Create the lattice once per frequency so the 10% defects remain constant
         IsingLattice lattice(L);
         lattice.initializeDefects(rng, activeFraction);
 
@@ -63,6 +68,6 @@ int main() {
         std::cout << "Saved: " << filename << std::endl;
     }
 
-    std::cout << "\nAll batch simulations complete!" << std::endl;
+    std::cout << "\nAll frequency simulations complete!" << std::endl;
     return 0;
 }
