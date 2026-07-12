@@ -11,9 +11,8 @@
 #include <random>
 #include <vector>
 class IsingLattice {
-private:
-    int L; // latice dimesntion (l by L)
-    int N; // Number of spins
+public:
+
     std::vector<int> spins;
     std::vector<int> defects;
 
@@ -23,7 +22,8 @@ private:
         int safeY = (y % L + L) % L;
         return safeY * L + safeX;
     }
-public:
+    int L; // latice dimesntion (l by L)
+    int N; // Number of spins
     IsingLattice(int size);
     void initializeRandom(std::mt19937& rng);
     void initializeHomogeneous(int spinValue);
@@ -37,7 +37,7 @@ public:
     int calculateDeltaE(int x, int y, double H_ext, int J = 1) const;
     int calculateTotalMagnetization() const;
     int calculateTotalEnergy(int J = 1) const;
-
+    double calculateMagnetization() const;
     // Getters
     int getSize() const { return L; }
     int getNumSpins() const { return N; }

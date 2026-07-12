@@ -26,4 +26,5 @@ public:
     DynamicObservables simulateDynamic(double T, double H0, double omega, 
                                        int periods, int stepsPerPeriod, 
                                        int transientPeriods, double J = 1.0);
+    void metropolisSweep(double T, double H0,double omega, double t);
 };

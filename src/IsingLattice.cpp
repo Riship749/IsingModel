@@ -75,6 +75,20 @@ int IsingLattice::calculateTotalMagnetization() const {
     }
     return M;
 }
+double IsingLattice::calculateMagnetization() const {
+    double M = 0.0;
+
+    // Linear sweep through the 1D flat array ensures perfect cache locality
+    for (int i = 0; i < N; ++i) {
+        // Only count spins that are NOT quenched defects
+        if (defects[i] ==1) {
+            M += spins[i];
+        }
+    }
+
+    // Normalize by the total number of sites (L * L)
+    return M / N;
+}
 
 // Calculate the total energy of the entire lattice
 int IsingLattice::calculateTotalEnergy(int J) const {

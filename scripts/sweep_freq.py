@@ -2,8 +2,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # The frequency labels we ran
-omega_labels = ["0.01", "0.05", "0.10"]
-colors = ['blue', 'green', 'red']
+omega_labels = ["0.01", "0.05", "0.10", "0.20"]
+colors = ['blue', 'green', 'red', 'yellow']
 
 plt.figure(figsize=(10, 7))
 
