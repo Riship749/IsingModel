@@ -1,5 +1,8 @@
 # Domain Wall Pinning and Dynamic Phase Transitions in the Driven 2D Ising Model
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20549414.svg)](https://zenodo.org/records/20549414)
+*Read the full manuscript on Zenodo: [Link to Paper](https://zenodo.org/records/20549414)*
+** Status: Currently under peer review at the International Journal of Modern Physics C (IJMPC).**
 A high-performance C++ Monte Carlo simulation engine modeling out-of-equilibrium critical phenomena and domain wall dynamics in disordered ferromagnetic lattices.
 
 ## Overview
@@ -10,15 +13,15 @@ The project is divided into two phases:
 2. **Out-of-Equilibrium Dynamics (Novel Contribution):** Introducing a time-dependent oscillating magnetic field and quenched lattice defects to mathematically map how non-magnetic impurities pin domain walls and collapse dynamic limit cycles.
 
 ## Project Evolution & Inspiration
-This engine was initially built to re-create the baseline thermodynamic results outlined in the paper Introduction to Monte Carlo methods for an Ising Model of a Ferromagnet by Jacques Kotze: https://arxiv.org/pdf/0803.0217 
+This engine was initially built to re-create the baseline thermodynamic results outlined in the paper *Introduction to Monte Carlo methods for an Ising Model of a Ferromagnet* by Jacques Kotze: https://arxiv.org/pdf/0803.0217 
 
-After successfully re-creating Jindal's static phase transition models, I expanded the underlying Hamiltonian to push the system out of equilibrium:
+After successfully re-creating Kotze's static phase transition models, I expanded the underlying Hamiltonian to push the system out of equilibrium:
 $$\mathcal{H} = -J \sum_{\langle i,j \rangle} \epsilon_i \epsilon_j s_i s_j - H_0 \sin(\omega t) \sum_{i} \epsilon_i s_i$$
 By introducing an oscillating external field $H(t)$ and a quenched defect matrix $\epsilon_i$, this project moves beyond standard static models to study chaos, hysteresis, and structural magnetic softening.
 
 ## Computational Architecture
 * **Language:** C++11 (Simulation Engine), Python 3 (Data Visualization)
-* **Optimization:** 1D flat-array grid mapping to prevent CPU cache misses during sequential Metropolis sweeps.
+* **Optimization:** 1D flat-array grid mapping to prevent CPU cache misses during sequential Metropolis sweeps. OpenMP utilized for parallelized finite-size scaling ensembles.
 * **Dynamic Probabilities:** Real-time Boltzmann weight calculations ($e^{-\Delta E / T}$) integrated with a "fast-fail" condition that skips calculations on impurity coordinates, preserving massive execution speed.
 * **RNG:** `std::mt19937` (Mersenne Twister) to ensure rigorous statistical sampling without pattern artifacts.
 
@@ -29,8 +32,8 @@ By introducing an oscillating external field $H(t)$ and a quenched defect matrix
 ### 1. Static Baseline Validation (Finite-Size Scaling)
 Before introducing chaos, the engine was validated against Lars Onsager's exact analytical solutions for the 2D Ising model. By calculating the maximum magnetic susceptibility across different grid sizes ($L=8, 16, 32$), the engine successfully extracted the theoretical critical exponent.
 
-![Static Validation](data/scaling_plot.png)
-> **Figure 1:** Log-Log plot of Maximum Susceptibility vs. Lattice Size. The calculated slope of **1.7519** perfectly mirrors the theoretical exact limit of $\gamma/\nu = 1.75$, proving the statistical rigor of the underlying Metropolis engine.
+![Static Validation](data/finite_size_scaling_plot_fixed.png)
+> **Figure 1:** Log-Log plot of Maximum Susceptibility vs. Lattice Size. The calculated slope perfectly mirrors the theoretical exact limit of $\gamma/\nu = 1.75$, proving the statistical rigor of the underlying Metropolis engine.
 
 ### 2. The Dynamic Phase Boundary
 By exposing the lattice to an oscillating magnetic field H(t) = H0 * sin(wt), the system is forced into a hysteresis limit cycle. The Dynamic Order Parameter ($Q$) was calculated by taking the absolute time-averaged magnetization over a full oscillating period.
@@ -41,13 +44,20 @@ By exposing the lattice to an oscillating magnetic field H(t) = H0 * sin(wt), th
 ### 3. Proof of Domain Wall Pinning
 To study how non-magnetic impurities alter physical strength, the parameter space was scanned across multiple defect concentrations (0% to 30%).
 
-![Defect Scaling](data/defect_scaling_overlay.png)
+![Defect Scaling](scripts/Figure_3_New.png)
 > **Figure 3:** Dynamic phase boundaries mapped across varying impurity concentrations. As defect density increases, the absolute-zero coercive limit drops and the dynamically ordered parameter space collapses. This computationally proves that quenched impurities act as localized pinning centers, snagging expanding domain walls and structurally "softening" the ferromagnet.
+
+### 4. Dynamic Observables
+![Observables](data/observables_plot.png)
+> **Figure 4:** Timeseries extraction of macroscopic magnetization and energy, tracking the system as it falls into a dynamic limit cycle under the oscillating field.
 
 ---
 
-## Build & Execution Instructions
+## Reproducing Paper Figures
+
+The simulation engine is compiled into a single executable that accepts command-line arguments to run specific experiments from the paper.
 
 **1. Compile the C++ Engine**
 ```bash
-g++ -O3 -std=c++11 src/main.cpp src/IsingLattice.cpp src/MonteCarlo.cpp -o ising_sim
+g++ -O3 -std=c++11 src/main.cpp src/IsingLattice.cpp src/MonteCarlos.cpp -o ising_sim
+
